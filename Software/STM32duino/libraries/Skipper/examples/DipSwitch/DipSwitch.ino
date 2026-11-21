@@ -1,27 +1,28 @@
-// Prints the 6-bit DIP switch (SW1) whenever it changes.
-// Open the Serial Monitor on the DAPLink COM port at 115200 baud.
+// Prints the 6-position DIP switch as a number (0-63) whenever it changes.
+// Open the Serial Monitor at 115200 baud.
 
-#include <Skipper.h>
+const int dipPins[] = { DIP0, DIP1, DIP2, DIP3, DIP4, DIP5 };
+int lastValue = -1;
 
-uint8_t last = 0xFF;
-
-void setup()
-{
+void setup() {
   Serial.begin(115200);
-  Skipper::begin();
+  for (int i = 0; i < 6; i++) {
+    pinMode(dipPins[i], INPUT);
+  }
 }
 
-void loop()
-{
-  uint8_t value = Skipper::dipSwitch();
-  if (value != last) {
-    last = value;
-    Serial.print("DIP switch: ");
-    for (int bit = DIP_COUNT - 1; bit >= 0; bit--) {
-      Serial.print((value >> bit) & 1);
+void loop() {
+  int value = 0;
+  for (int i = 0; i < 6; i++) {
+    if (digitalRead(dipPins[i]) == HIGH) {
+      value += 1 << i;
     }
-    Serial.print(" = ");
+  }
+
+  if (value != lastValue) {
+    Serial.print("DIP switch: ");
     Serial.println(value);
+    lastValue = value;
   }
   delay(20);
 }

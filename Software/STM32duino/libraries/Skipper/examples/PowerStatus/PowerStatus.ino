@@ -1,23 +1,16 @@
-// Reports where Skipper is getting power from, and the USB-C status lines.
-// Open the Serial Monitor on the DAPLink COM port at 115200 baud.
+// Shows where Skipper is getting power from.
+// Open the Serial Monitor at 115200 baud.
 
-#include <Skipper.h>
-
-void setup()
-{
+void setup() {
   Serial.begin(115200);
-  Skipper::begin();
+  pinMode(USB_UFP_DETECT, INPUT);  // Debug port has power
+  pinMode(BUCK_DETECT, INPUT);     // 7-36 V terminal input has power
 }
 
-void loop()
-{
-  Serial.print("DAPLink USB: ");
-  Serial.print(Skipper::usbPowered() ? "yes" : "no");
-  Serial.print("  Bus (7-36V): ");
-  Serial.print(Skipper::busPowered() ? "yes" : "no");
-  Serial.print("  USB host fault: ");
-  Serial.print(Skipper::usbHostFault() ? "YES" : "no");
-  Serial.print("  TUSB320 INT: ");
-  Serial.println(Skipper::usbCInterrupt() ? "active" : "idle");
+void loop() {
+  Serial.print("Debug port: ");
+  Serial.print(digitalRead(USB_UFP_DETECT) == HIGH ? "yes" : "no");
+  Serial.print("   Terminal input: ");
+  Serial.println(digitalRead(BUCK_DETECT) == HIGH ? "yes" : "no");
   delay(1000);
 }

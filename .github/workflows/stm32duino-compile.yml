@@ -37,7 +37,7 @@ jobs:
         working-directory: Software/STM32duino
         run: |
           status=0
-          for example in libraries/Skipper/examples/*/; do
+          for example in libraries/*/examples/*/; do
             echo "::group::$example"
             arduino-cli compile -b usolder:stm32:skipper --warnings all "$example" || status=1
             echo "::endgroup::"
