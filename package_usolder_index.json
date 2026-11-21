@@ -26,9 +26,76 @@
             }
           ],
           "toolsDependencies": []
+        },
+        {
+          "name": "uSolder STM32 Boards",
+          "architecture": "stm32",
+          "version": "0.1.0-beta.2",
+          "category": "Contributed",
+          "url": "https://github.com/uSolder/Skipper/releases/download/stm32duino-v0.1.0-beta.2/Skipper-STM32duino-0.1.0-beta.2.tar.bz2",
+          "archiveFileName": "Skipper-STM32duino-0.1.0-beta.2.tar.bz2",
+          "checksum": "SHA-256:93440043ea41ae5033504e9458ebbaf2b7c1a4401fa29ec72938ad0ac67ba58a",
+          "size": "20329",
+          "help": {
+            "online": "https://github.com/uSolder/Skipper/tree/main/Software/STM32duino"
+          },
+          "boards": [
+            {
+              "name": "uSolder Skipper"
+            }
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "usolder",
+              "name": "openocd-st",
+              "version": "0.12.0-cubeide-r7"
+            }
+          ]
         }
       ],
-      "tools": []
+      "tools": [
+        {
+          "name": "openocd-st",
+          "version": "0.12.0-cubeide-r7",
+          "systems": [
+            {
+              "host": "x86_64-mingw32",
+              "url": "https://github.com/uSolder/Skipper/releases/download/openocd-v0.12.0-cubeide-r7/openocd-st-0.12.0-cubeide-r7-win32-x64.zip",
+              "archiveFileName": "openocd-st-0.12.0-cubeide-r7-win32-x64.zip",
+              "checksum": "SHA-256:57426f84232f880a4e2eed417897ec9a3a4907d14002f6f755cd0a1a45f1f02c",
+              "size": "2419610"
+            },
+            {
+              "host": "x86_64-linux-gnu",
+              "url": "https://github.com/uSolder/Skipper/releases/download/openocd-v0.12.0-cubeide-r7/openocd-st-0.12.0-cubeide-r7-linux-x64.tar.gz",
+              "archiveFileName": "openocd-st-0.12.0-cubeide-r7-linux-x64.tar.gz",
+              "checksum": "SHA-256:af94c8052331ff182e1e27351f72fca6079572fb5eaff5ef019acc387b4b8521",
+              "size": "2123021"
+            },
+            {
+              "host": "aarch64-linux-gnu",
+              "url": "https://github.com/uSolder/Skipper/releases/download/openocd-v0.12.0-cubeide-r7/openocd-st-0.12.0-cubeide-r7-linux-arm64.tar.gz",
+              "archiveFileName": "openocd-st-0.12.0-cubeide-r7-linux-arm64.tar.gz",
+              "checksum": "SHA-256:e2fe8a9fad629906d2f88377c224a346c2b796088f76e70f8813339defcab569",
+              "size": "2114203"
+            },
+            {
+              "host": "x86_64-apple-darwin",
+              "url": "https://github.com/uSolder/Skipper/releases/download/openocd-v0.12.0-cubeide-r7/openocd-st-0.12.0-cubeide-r7-darwin-x64.tar.gz",
+              "archiveFileName": "openocd-st-0.12.0-cubeide-r7-darwin-x64.tar.gz",
+              "checksum": "SHA-256:bb7723551f008ca5c6404abb01168d748bb4380f14c81c3076e2c70180d2cdd0",
+              "size": "1899661"
+            },
+            {
+              "host": "arm64-apple-darwin",
+              "url": "https://github.com/uSolder/Skipper/releases/download/openocd-v0.12.0-cubeide-r7/openocd-st-0.12.0-cubeide-r7-darwin-arm64.tar.gz",
+              "archiveFileName": "openocd-st-0.12.0-cubeide-r7-darwin-arm64.tar.gz",
+              "checksum": "SHA-256:19ffed54383a472bdd6f85fc92454297c23be17d6270dfc7e9a7587b33b54fc0",
+              "size": "1933149"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
