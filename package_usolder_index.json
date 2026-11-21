@@ -51,6 +51,31 @@
               "version": "0.12.0-cubeide-r7"
             }
           ]
+        },
+        {
+          "name": "uSolder STM32 Boards",
+          "architecture": "stm32",
+          "version": "0.1.0-beta.3",
+          "category": "Contributed",
+          "url": "https://github.com/uSolder/Skipper/releases/download/stm32duino-v0.1.0-beta.3/Skipper-STM32duino-0.1.0-beta.3.tar.bz2",
+          "archiveFileName": "Skipper-STM32duino-0.1.0-beta.3.tar.bz2",
+          "checksum": "SHA-256:b2ae05b5ecc09ab1e1d3ead4a35f744bcfd2c386b19316fe0370b47062a50c0f",
+          "size": "25249",
+          "help": {
+            "online": "https://github.com/uSolder/Skipper/tree/main/Software/STM32duino"
+          },
+          "boards": [
+            {
+              "name": "uSolder Skipper"
+            }
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "usolder",
+              "name": "openocd-st",
+              "version": "0.12.0-cubeide-r7"
+            }
+          ]
         }
       ],
       "tools": [
