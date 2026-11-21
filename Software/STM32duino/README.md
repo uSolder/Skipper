@@ -84,18 +84,10 @@ Select *Tools > Debug symbols and core logs > Symbols Enabled (-g)* and
 
 | Object | Peripheral | Pins | Where |
 | --- | --- | --- | --- |
-| `Serial` | USART3 | TX PD8, RX PD9 | DAPLink virtual COM port (USB-C UFP) |
+| `Serial` | USART3 | TX PD8, RX PD9 | Debug port (DAPLink virtual COM port) |
 | `Serial1` | USART1 | TX PA9, RX PA10 | UART Header 1 (J14) |
 | `Serial2` | USART2 | TX PD5, RX PD6 | UART Header 2 (J15) |
-| `SerialUSB` | USB FS | PA11/PA12 | USB-C DRP, with *Tools > USB support > CDC* |
-
-`Serial1` and `Serial2` are not created by default. Declare them in your
-sketch:
-
-```cpp
-Uart Serial1(PIN_SERIAL1_RX, PIN_SERIAL1_TX);
-Uart Serial2(PIN_SERIAL2_RX, PIN_SERIAL2_TX);
-```
+| `SerialUSB` | USB FS | PA11/PA12 | USB DRP port, with *Tools > USB support > CDC* |
 
 Choosing *USB support > CDC (generic 'Serial' supersede U(S)ART)* makes
 `Serial` the USB-C DRP port instead of the DAPLink COM port.
@@ -169,18 +161,61 @@ switch for user input.
 A sketch can replace the function by defining its own `SystemClock_Config()`
 with `extern "C"` linkage.
 
-## Skipper library
+## Examples
 
-The bundled `Skipper` library (`#include <Skipper.h>`) reads the DIP switch
-and status lines. Its examples are under *File > Examples > Skipper*:
+Under *File > Examples > Skipper*, using plain Arduino functions:
 
-* **Blink**: the user LED.
-* **DipSwitch**: prints the DIP switch value.
+* **Blink**: the LED.
+* **DipSwitch**: prints the DIP switch as a number.
 * **PowerStatus**: shows which supplies are present.
-* **SerialPorts**: bridges both UART headers to the DAPLink COM port.
-* **CANBus**: sends and receives classic CAN at 500 kbit/s using the STM32
-  HAL FDCAN driver. The bus needs 120 ohm termination at each end, and
-  Skipper has none on board.
+* **SerialPorts**: connects UART header 1 to the Serial Monitor.
+
+## CAN: the SkipperCAN library
+
+`#include <SkipperCAN.h>` gives a `CAN` object for classic CAN and CAN-FD.
+The bus needs a 120 ohm terminator at each end; Skipper has none on board.
+
+```cpp
+CAN.begin(500000);                    // classic CAN, 500 kbit/s
+CAN.begin(500000, 2000000);           // CAN-FD with a 2 Mbit/s data phase
+
+CAN.send(0x100, data, length);        // up to 8 bytes (64 with CAN-FD)
+CAN.send(0x100, myVariable);          // a whole variable or struct
+
+if (CAN.available()) {
+  CanMessage msg = CAN.read();        // msg.id, msg.length, msg.data[]
+}
+```
+
+Variables can also follow the bus with no CAN code in `loop()`:
+
+```cpp
+volatile MotorStatus motor;
+volatile Settings settings;
+
+CAN.listen(0x200, motor);               // motor is updated whenever 0x200 arrives
+CAN.listen(0x201, settings, onChange);  // ...and onChange() is called
+CAN.broadcast(0x300, status, 100);      // status is sent every 100 ms
+```
+
+* A function given to `listen()` runs inside an interrupt: keep it short,
+  with no `delay()`, `Serial` or waiting.
+* `CAN.updated(id)` is true once after new data arrived; `CAN.age(id)` is
+  the milliseconds since the last message, to notice a silent sender.
+* Reading a struct while a message arrives can mix old and new values. Use
+  `CAN.copy(id, localCopy)` for a consistent snapshot. When changing several
+  fields of a broadcast variable that belong together, do it between
+  `noInterrupts()` and `interrupts()`.
+* Messages for `listen()` IDs don't appear in `available()` / `read()`.
+* Structs are copied byte for byte, so both ends need the same layout. Two
+  Skippers always match; for other devices, mind byte order and padding.
+* Also: `listenExtended`, `broadcastExtended`, `sendExtended` for 29-bit
+  IDs, `stopListening(id)`, `stopBroadcast(id)`, `filter(id, mask)`,
+  `onReceive(function)`, `end()`. Up to 16 `listen()` and 16 `broadcast()`
+  IDs. Periodic broadcasts run from the 1 ms SysTick interrupt.
+
+Examples under *File > Examples > SkipperCAN*: **CANSend** / **CANReceive**,
+and **CANBroadcast** / **CANListen**. Load one of each pair on two boards.
 
 ## Layout
 
@@ -188,7 +223,8 @@ and status lines. Its examples are under *File > Examples > Skipper*:
 boards.txt                  board definition (references STMicroelectronics:arduino)
 platform.txt                platform name and version only
 variants/SKIPPER/           pin map, clock setup and linker script
-libraries/Skipper/          board helper library and examples
+libraries/Skipper/          getting-started examples
+libraries/SkipperCAN/       CAN and CAN-FD library
 tools/package.py            builds the Boards Manager archive and index
 ```
 

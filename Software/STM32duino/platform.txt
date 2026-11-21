@@ -2,7 +2,7 @@
 # STMicroelectronics STM32 core, see build.core in boards.txt.
 
 name=uSolder STM32 Boards
-version=0.1.0-beta.2
+version=0.1.0-beta.3
 
 # Upload through the on-board DAPLink with ST's OpenOCD (the openocd-st tool,
 # installed with this package from the Boards Manager).

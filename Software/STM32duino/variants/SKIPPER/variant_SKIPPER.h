@@ -327,7 +327,10 @@
   #define PIN_SERIAL_TX         PD8
 #endif
 
-// Pins used when Serial1 / Serial2 are instantiated (UART headers J14 / J15)
+// Serial1 and Serial2 are the UART headers J14 and J15, always available.
+#define ENABLE_HWSERIAL1
+#define ENABLE_HWSERIAL2
+
 #ifndef PIN_SERIAL1_RX
   #define PIN_SERIAL1_RX        PA10
 #endif
