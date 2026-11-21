@@ -26,7 +26,10 @@ JOBS=$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 4)
 HOST=""
 CMAKE_EXTRA=()
 LDFLAGS_EXTRA=""
+LIBS_EXTRA=""
 EXE=""
+# Static libusb and hidapi on macOS need these system frameworks.
+MACOS_LIBS="-framework CoreFoundation -framework IOKit -framework Security -lobjc"
 case "$TARGET" in
   linux-x64|linux-arm64)
     # hidraw would need libudev; the libusb backend works without it.
@@ -39,15 +42,21 @@ case "$TARGET" in
     EXE=.exe
     ;;
   darwin-arm64)
+    export CC=clang CC_FOR_BUILD=clang
     export CFLAGS="-arch arm64 -mmacosx-version-min=11.0"
     export LDFLAGS="-arch arm64 -mmacosx-version-min=11.0"
     CMAKE_EXTRA=(-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0)
+    LIBS_EXTRA=$MACOS_LIBS
     ;;
   darwin-x64)
+    # Cross-compiled on Apple Silicon. clang targets x86_64 through -arch;
+    # without CC set, jimtcl looks for a non-existent x86_64-apple-darwin-cc.
     HOST=x86_64-apple-darwin
+    export CC=clang CC_FOR_BUILD=clang
     export CFLAGS="-arch x86_64 -mmacosx-version-min=10.15"
     export LDFLAGS="-arch x86_64 -mmacosx-version-min=10.15"
     CMAKE_EXTRA=(-DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15)
+    LIBS_EXTRA=$MACOS_LIBS
     ;;
   *)
     echo "Unknown target: $TARGET" >&2
@@ -111,7 +120,8 @@ git clone --quiet "$OPENOCD_REPO" openocd
     --disable-internal-libjaylink \
     --disable-linuxgpiod \
     --without-capstone \
-    LDFLAGS="${LDFLAGS:-} $LDFLAGS_EXTRA"
+    LDFLAGS="${LDFLAGS:-} $LDFLAGS_EXTRA" \
+    LIBS="$LIBS_EXTRA"
   make -j"$JOBS"
   make install-strip
 )
