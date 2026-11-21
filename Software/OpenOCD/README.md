@@ -22,8 +22,8 @@ The source is used as ST publishes it. Only the build is ours:
 | --- | --- |
 | `win32-x64` | Linux, MinGW-w64 cross compiler |
 | `linux-x64`, `linux-arm64` | Ubuntu 22.04 |
-| `darwin-arm64` | macOS 14 |
-| `darwin-x64` | macOS 14, cross-compiled |
+| `darwin-arm64` | macOS (Apple Silicon) |
+| `darwin-x64` | macOS (Apple Silicon), cross-compiled |
 
 Each archive has `bin/openocd` and `openocd/scripts/`, the same layout as
 the xPack builds. CI tests every binary on its own platform.
