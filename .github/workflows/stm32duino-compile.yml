@@ -1,0 +1,48 @@
+name: STM32duino examples
+
+on:
+  push:
+    paths:
+      - "Software/STM32duino/**"
+      - ".github/workflows/stm32duino-compile.yml"
+  pull_request:
+    paths:
+      - "Software/STM32duino/**"
+      - ".github/workflows/stm32duino-compile.yml"
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: arduino/setup-arduino-cli@v2
+
+      - name: Install STM32 core
+        run: |
+          arduino-cli config init
+          arduino-cli config add board_manager.additional_urls \
+            https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json
+          arduino-cli core update-index
+          arduino-cli core install STMicroelectronics:stm32@3.1.0
+
+      - name: Link platform into sketchbook
+        run: |
+          sketchbook="$(arduino-cli config get directories.user)"
+          mkdir -p "$sketchbook/hardware/usolder"
+          ln -s "$GITHUB_WORKSPACE/Software/STM32duino" "$sketchbook/hardware/usolder/stm32"
+          arduino-cli board listall usolder
+
+      - name: Compile examples
+        working-directory: Software/STM32duino
+        run: |
+          status=0
+          for example in libraries/Skipper/examples/*/; do
+            echo "::group::$example"
+            arduino-cli compile -b usolder:stm32:skipper --warnings all "$example" || status=1
+            echo "::endgroup::"
+          done
+          echo "::group::Blink with USB CDC"
+          arduino-cli compile -b usolder:stm32:skipper:usb=CDCgen --warnings all libraries/Skipper/examples/Blink || status=1
+          echo "::endgroup::"
+          exit $status

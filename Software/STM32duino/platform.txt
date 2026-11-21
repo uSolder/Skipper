@@ -1,0 +1,5 @@
+# Everything else (build recipes, tools, libraries) comes from the
+# STMicroelectronics STM32 core, see build.core in boards.txt.
+
+name=uSolder STM32 Boards
+version=0.1.0-beta.1
