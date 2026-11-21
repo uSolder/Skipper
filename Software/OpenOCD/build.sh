@@ -76,7 +76,10 @@ curl -fsSL "https://github.com/libusb/libusb/releases/download/v$LIBUSB_VERSION/
 
 echo "== hidapi $HIDAPI_VERSION"
 curl -fsSL "https://github.com/libusb/hidapi/archive/refs/tags/hidapi-$HIDAPI_VERSION.tar.gz" | tar -xz
+# CMAKE_POLICY_VERSION_MINIMUM: hidapi asks for an old CMake that CMake 4
+# no longer accepts without it.
 PKG_CONFIG=pkg-config cmake -S "hidapi-hidapi-$HIDAPI_VERSION" -B hidapi-build \
+  -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX="$DEPS" \
   -DCMAKE_PREFIX_PATH="$DEPS" \
