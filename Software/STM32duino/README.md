@@ -49,7 +49,9 @@ mkdir -p ~/Arduino/hardware/usolder
 ln -s "$PWD/Skipper/Software/STM32duino" ~/Arduino/hardware/usolder/stm32
 ```
 
-Use either this or the Boards Manager version, not both.
+Use either this or the Boards Manager version, not both. A git install
+doesn't get the `openocd-st` tool that the DAPLink upload method uses; the
+DFU method works without it.
 
 With arduino-cli the board is `usolder:stm32:skipper`:
 
@@ -63,13 +65,20 @@ Choose the method under *Tools > Upload method*.
 
 | Method | Connector | How |
 | --- | --- | --- |
-| DAPLink (drag and drop) | USB-C **UFP** (DAPLink) | Copies the `.bin` to the DAPLink USB drive (volume `SKIPPER` or `DAPLINK`). Needs DAPLink firmware with STM32H523 support on the on-board STM32F103. |
-| STM32CubeProgrammer (Serial) | USB-C **UFP** (DAPLink) | Uses the STM32 ROM bootloader on USART3 through the DAPLink COM port. Hold **BOOT**, press **RESET**, release BOOT, then upload. Select the DAPLink COM port. |
-| STM32CubeProgrammer (DFU) | USB-C **DRP** | Uses the ROM bootloader over USB. Hold **BOOT**, press **RESET**, release BOOT, then upload. |
+| DAPLink (Debug port), default | **Debug port** | Programs the STM32H523 through the on-board DAPLink with OpenOCD. Just click Upload. |
+| STM32CubeProgrammer (Serial, BOOT button) | **Debug port** | STM32 ROM bootloader on USART3 through the DAPLink COM port. Hold **BOOT**, press **RESET**, release BOOT, then upload. |
+| STM32CubeProgrammer (DFU, BOOT button) | **USB DRP port** | ROM bootloader over USB. Hold **BOOT**, press **RESET**, release BOOT, then upload. Works without the DAPLink. |
 
-The serial and DFU methods need
+The default method uses [ST's OpenOCD](../OpenOCD), which the Boards
+Manager installs together with this package. The serial and DFU methods need
 [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html)
-installed. Press RESET after a bootloader upload to run the sketch.
+installed; press RESET after uploading with them to run the sketch.
+
+## Debugging
+
+*Sketch > Debug* in Arduino IDE 2 works through the same DAPLink and OpenOCD.
+Select *Tools > Debug symbols and core logs > Symbols Enabled (-g)* and
+*Tools > Optimize > Debug (-Og)* first for useful breakpoints and variables.
 
 ## Serial ports
 

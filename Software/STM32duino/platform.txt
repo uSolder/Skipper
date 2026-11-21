@@ -2,4 +2,13 @@
 # STMicroelectronics STM32 core, see build.core in boards.txt.
 
 name=uSolder STM32 Boards
-version=0.1.0-beta.1
+version=0.1.0-beta.2
+
+# Upload through the on-board DAPLink with ST's OpenOCD (the openocd-st tool,
+# installed with this package from the Boards Manager).
+tools.openocd-st.path={runtime.tools.openocd-st.path}
+tools.openocd-st.cmd=bin/openocd
+tools.openocd-st.cmd.windows=bin/openocd.exe
+tools.openocd-st.upload.params.verbose=-d2
+tools.openocd-st.upload.params.quiet=-d0
+tools.openocd-st.upload.pattern="{path}/{cmd}" {upload.verbose} -s "{path}/openocd/scripts" -f "{runtime.platform.path}/debugger/skipper.cfg" -c "program {{build.path}/{build.project_name}.elf} verify reset exit"
