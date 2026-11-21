@@ -1,0 +1,34 @@
+{
+  "packages": [
+    {
+      "name": "usolder",
+      "maintainer": "uSolder",
+      "websiteURL": "https://usolder.com",
+      "help": {
+        "online": "https://github.com/uSolder/Skipper/tree/main/Software/STM32duino"
+      },
+      "platforms": [
+        {
+          "name": "uSolder STM32 Boards",
+          "architecture": "stm32",
+          "version": "0.1.0-beta.1",
+          "category": "Contributed",
+          "url": "https://github.com/uSolder/Skipper/releases/download/stm32duino-v0.1.0-beta.1/Skipper-STM32duino-0.1.0-beta.1.tar.bz2",
+          "archiveFileName": "Skipper-STM32duino-0.1.0-beta.1.tar.bz2",
+          "checksum": "SHA-256:f5a7a1b0bbbfe09d12fa7ce1c783fcada37a8f1be460a9fa6bba77167477ee73",
+          "size": "19685",
+          "help": {
+            "online": "https://github.com/uSolder/Skipper/tree/main/Software/STM32duino"
+          },
+          "boards": [
+            {
+              "name": "uSolder Skipper"
+            }
+          ],
+          "toolsDependencies": []
+        }
+      ],
+      "tools": []
+    }
+  ]
+}
