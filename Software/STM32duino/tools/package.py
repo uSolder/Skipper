@@ -16,8 +16,11 @@ import tarfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CONTENTS = ["boards.txt", "platform.txt", "variants", "libraries", "README.md", "LICENSE"]
+CONTENTS = ["boards.txt", "platform.txt", "variants", "libraries", "debugger", "README.md", "LICENSE"]
 INDEX_NAME = "package_usolder_index.json"
+# Tools this package installs, as published by their own releases
+# (e.g. openocd-st.json from the OpenOCD release).
+TOOL_ENTRIES = sorted((ROOT / "tools").glob("*.json"))
 REPO_URL = "https://github.com/uSolder/Skipper/tree/main/Software/STM32duino"
 
 
@@ -91,7 +94,17 @@ def main():
     }
 
     index = json.loads(args.index.read_text()) if args.index and args.index.exists() else new_index()
-    platforms = index["packages"][0]["platforms"]
+    package = index["packages"][0]
+    package.setdefault("tools", [])
+
+    for path in TOOL_ENTRIES:
+        tool = json.loads(path.read_text())
+        entry["toolsDependencies"].append(
+            {"packager": package["name"], "name": tool["name"], "version": tool["version"]})
+        package["tools"] = [t for t in package["tools"]
+                            if (t["name"], t["version"]) != (tool["name"], tool["version"])] + [tool]
+
+    platforms = package["platforms"]
     platforms[:] = [p for p in platforms if p["version"] != version] + [entry]
 
     (args.out / INDEX_NAME).write_text(json.dumps(index, indent=2) + "\n")

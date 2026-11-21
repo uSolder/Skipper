@@ -38,12 +38,19 @@ skipper.pid.0=0x5740
 
 skipper.debug.svd_file={runtime.tools.STM32_SVD.path}/svd/STM32H5xx/STM32H523.svd
 
+# Debugging (Sketch > Debug) through the on-board DAPLink with ST's OpenOCD.
+# The three script slots are interface, SWD settings, target.
+skipper.openocd.target=stm32h5x
+skipper.debug.server.openocd.path={runtime.tools.openocd-st.path}/bin/openocd
+skipper.debug.server.openocd.scripts_dir={runtime.tools.openocd-st.path}/openocd/scripts
+skipper.debug.server.openocd.scripts.0=interface/cmsis-dap.cfg
+skipper.debug.server.openocd.scripts.1={runtime.platform.path}/debugger/skipper-swd.cfg
+
 # Upload menu
-# The on-board DAPLink probe shows up as a USB drive on the USB-C UFP connector.
-skipper.menu.upload_method.dapMassStorage=DAPLink (drag and drop)
-skipper.menu.upload_method.dapMassStorage.upload.protocol=
-skipper.menu.upload_method.dapMassStorage.upload.tool=STMicroelectronics:massStorageCopy
-skipper.menu.upload_method.dapMassStorage.node=SKIPPER,DAPLINK
+# Default: program through the on-board DAPLink on the Debug port.
+skipper.menu.upload_method.dapMethod=DAPLink (Debug port)
+skipper.menu.upload_method.dapMethod.upload.protocol=cmsis-dap
+skipper.menu.upload_method.dapMethod.upload.tool=openocd-st
 
 # ROM bootloader over the DAPLink virtual COM port (USART3): hold BOOT, press RESET.
 skipper.menu.upload_method.serialMethod=STM32CubeProgrammer (Serial, BOOT button)
