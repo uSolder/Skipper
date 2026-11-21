@@ -29,7 +29,7 @@ LDFLAGS_EXTRA=""
 LIBS_EXTRA=""
 EXE=""
 # Static libusb and hidapi on macOS need these system frameworks.
-MACOS_LIBS="-framework CoreFoundation -framework IOKit -framework Security -lobjc"
+MACOS_LIBS="-framework CoreFoundation -framework IOKit -framework Security -framework AppKit -lobjc"
 case "$TARGET" in
   linux-x64|linux-arm64)
     # hidraw would need libudev; the libusb backend works without it.
